@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASKUMMMM</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom, #001f3f, #ff69b4); /* Geçişli arka plan */
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .askim, .karim {
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+      margin-top: 2rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 2s ease;
+    }
+    .askim h1, .karim h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ffcccb; /* Pembe metin */
+      text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.6);
+      animation: pop 1s ease-in-out infinite alternate;
+    }
+    .gorsel, .gorsel2 {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-bottom: 2rem;
+      transition: transform 0.5s ease;
+    }
+    .gorsel img, .gorsel2 img {
+      max-width: 200px;
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gorsel img:hover, .gorsel2 img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes pop {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div class="askim">
+    <h1>SENİ ÇOK SEVİYORUM HER ŞEYİM, BİR TANEMM, AŞKIMMM!</h1>
+  </div>
+  <div class="gorsel">
+    <img src="img/gorsel1.jpg" alt="Görsel 1">
+    <img src="img/gorsel2.jpg" alt="Görsel 2">
+    <img src="img/gorsel3.jpg" alt="Görsel 3">
+    <img src="img/gorsel4.jpg" alt="Görsel 4">
+  </div>
+  <div class="karim">
+    <h1>Karım da karım</h1>
+  </div>
+  <div class="gorsel2">
+    <img src="img/gorsel5.jpg" alt="Görsel 5">
+    <img src="img/gorsel6.jpg" alt="Görsel 6">
+    <img src="img/gorsel7.jpg" alt="Görsel 7">
+    <img src="img/gorsel8.jpg" alt="Görsel 8">
+  </div>
+
+  <canvas id="snowCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("snowCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function createParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 4 + 1,
+        speed: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        type: Math.random() > 0.5 ? 'snow' : 'heart', // Kar tanesi veya kalp
+      };
+    }
+
+    function createParticles() {
+      particles = Array.from({ length: 200 }, createParticle);
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        ctx.globalAlpha = particle.opacity;
+        if (particle.type === 'snow') {
+          ctx.fillStyle = "white";
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (particle.type === 'heart') {
+          ctx.fillStyle = "pink";
+          ctx.beginPath();
+          ctx.moveTo(particle.x, particle.y);
+          ctx.arc(particle.x - particle.radius / 2, particle.y, particle.radius / 2, Math.PI, 0);
+          ctx.arc(particle.x + particle.radius / 2, particle.y, particle.radius / 2, Math.PI, 0);
+          ctx.lineTo(particle.x, particle.y + particle.radius);
+          ctx.fill();
+        }
+      });
+    }
+
+    function updateParticles() {
+      particles.forEach(particle => {
+        particle.y += particle.speed;
+        if (particle.y > canvas.height) {
+          particle.y = 0;
+          particle.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function animate() {
+      drawParticles();
+      updateParticles();
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createParticles();
+    });
+
+    createParticles();
+    animate();
+  </script>
+</body>
+</html>
